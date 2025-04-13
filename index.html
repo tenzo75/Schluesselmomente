@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schlüsselmomente - Das Spiel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="left-column">
+        <div id="gameDescription">
+            <h2>Spielanleitung</h2>
+            <p>Oh nein! Fritzi war mal wieder etwas tollpatschig und hat im Laden alle Ihre Schlüssel verloren!</p>
+            <p>Hilf Fritzi, die Schlüssel wieder einzusammeln. Aber pass auf den frechen Piraten-Hamster auf – der klaut dir wertvolle Zeit! Weiche auch den plötzlich auftauchenden Vans aus.</p>
+            <p>Schaffst du es durch alle 7 kniffligen Level?</p/* Lokale Schriftart definieren */
+@font-face {
+  font-family: 'AntonLocal';
+  src: url('fonts/Anton-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+body {
+    display: grid;
+    grid-template-columns: minmax(210px, 1fr) auto minmax(210px, 1fr);
+    padding: 10px;
+    font-family: sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background-image: url('back.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    align-items: start;
+}
+
+/* Linke Spalte - JETZT MIT ANLEITUNG/STEUERUNG */
+.left-column {
+    grid-column: 1 / 2; /* Bleibt Spalte 1 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Inhalt startet oben */
+    align-items: center; /* Oder stretch, je nach Wunsch */
+    box-sizing: border-box;
+    padding: 0 10px;
+    height: 100%;
+    /* Abstand des gesamten Inhalts von oben */
+    padding-top: 50px; /* <<< Wert von alter rechter Spalte übernommen */
+}
+
+/* Hauptinhaltsbereich (bleibt gleich) */
+.main-content {
+    grid-column: 2 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Info-Bar Styling (bleibt gleich) */
+#spiel-info { font-size: 1.1em; margin-bottom: 8px; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-around; gap: 10px 20px; background-color: rgba(245, 245, 245, 0.85); padding: 8px 15px; border-radius: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); width: 90%; max-width: 700px; text-align: center; }
+#spiel-info span { margin: 0 5px; flex-shrink: 0; white-space: nowrap; }
+#spiel-info span span { font-weight: bold; }
+#level-goal-display.highlight { color: #0D47A1; font-weight: bold; border-bottom: 2px solid #0D47A1; padding-bottom: 2px; }
+
+
+/* --- Highscore Styling --- */
+#highScoreSection {
+    width: 100%; /* Nimmt Breite der (jetzt rechten) Spalte ein */
+    background-color: rgba(238, 238, 238, 0.92);
+    padding: 8px 12px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.05);
+    overflow-y: auto;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    /* Abstand von oben (innerhalb der rechten Spalte) */
+    margin-top: 150px; /* <-- HIER Wert (in px) anpassen für vertikale Position */
+}
+#highScoreSection h2 { text-align: center; margin-top: 0; margin-bottom: 15px; color: #222; font-size: 1.1em; }
+#highScoreList { list-style-type: decimal; padding-left: 20px; margin: 0; }
+#highScoreList li { margin-bottom: 2px; font-size: 0.85em; padding: 2px 2px; border-bottom: 1px solid #ddd; line-height: 1.3; display: flex; justify-content: space-between; align-items: baseline; }
+#highScoreList li:last-child { border-bottom: none; }
+#highScoreList li .name-level-group { flex-grow: 1; white-space: normal; overflow: hidden; margin-right: 10px; }
+#highScoreList li span { display: inline-block; vertical-align: baseline; }
+#highScoreList li .name { font-weight: bold; margin-right: 4px; }
+#highScoreList li .level { text-align: left; font-size: 0.9em; color: #666; margin-right: 0; font-style: italic; }
+#highScoreList li .score { font-weight: bold; color: #2979FF; flex-shrink: 0; padding-left: 5px; }
+.highscore-info { font-size: 0.75em; color: #666; text-align: center; margin-top: 10px; font-style: italic; }
+
+
+/* Canvas Styling (bleibt gleich) */
+canvas { border: 1px solid #666; background-color: black; display: block; margin-top: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 8px; overflow: hidden; cursor: default; }
+canvas.clickable { cursor: pointer; }
+
+/* Steuerungserklärung (ist jetzt in linker Spalte) */
+#controlsExplanation {
+    width: 100%;
+    order: 2; /* <<< Reihenfolge in linker Spalte */
+    margin-bottom: 5px;
+    background-color: rgba(227, 242, 253, 0.92);
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.05);
+    font-size: 0.85em;
+    box-sizing: border-box;
+    white-space: normal;
+    overflow-wrap: break-word;
+    /* Abstand ZWISCHEN Anleitung und Steuerung */
+    margin-top: 20px; /* <-- HIER Wert (in px) anpassen */
+}
+#controlsExplanation h2 { font-size: 1.1em; margin-bottom: 10px; text-align: center; margin-top: 0; color: #01579B; }
+#controlsExplanation p { margin-bottom: 6px; line-height: 1.3; }
+#controlsExplanation ul { list-style-type: none; padding-left: 5px; margin-bottom: 8px; }
+#controlsExplanation li { margin-bottom: 3px; }
+#controlsExplanation strong { color: #01579B; }
+
+
+/* Rechte Spalte - JETZT MIT HIGHSCORE */
+.right-column {
+    grid-column: 3 / 4; /* Bleibt Spalte 3 */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* <<< Inhalt startet oben (damit margin-top für Highscore wirkt) */
+    align-items: center; /* Zentriert Highscore-Box horizontal */
+    box-sizing: border-box;
+    padding: 0 10px;
+    height: 100%;
+    /* padding-top: 50px; ENTFERNT (oder anpassen, falls gewünscht) */
+}
+
+/* Spielanleitung (ist jetzt in linker Spalte) */
+#gameDescription {
+    width: 100%;
+    order: 1; /* <<< Reihenfolge in linker Spalte */
+    margin-top: 0; /* Startet oben in linker Spalte (am Padding gemessen) */
+    margin-bottom: 5px; /* Abstand zur Steuerung (oder auf Steuerung margin-top) */
+    background-color: rgba(238, 238, 238, 0.92);
+    padding: 10px 15px;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    border: 1px solid rgba(0,0,0,0.05);
+    box-sizing: border-box;
+    font-size: 0.9em;
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+#gameDescription h2 { text-align: center; margin-top: 0; margin-bottom: 10px; color: #222; font-size: 1.2em; }
+#gameDescription p { margin-bottom: 8px; line-height: 1.4; }
+/* UL wird nicht mehr gebraucht, kann aber drin bleiben */
+#gameDescription ul { list-style-type: none; padding-left: 5px; margin-bottom: 8px; }
+#gameDescription li { margin-bottom: 4px; }
+
+
+/* Überschrift im Hauptbereich (bleibt gleich) */
+.main-content h1 { font-family: 'AntonLocal', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif; font-size: 3.5em; color: #F5F5F5; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; text-align: center; margin-top: 10px; margin-bottom: 15px; letter-spacing: 1px; }>
+            </div>
+        <div id="controlsExplanation">
+            <h2>Steuerung</h2>
+            <p>Benutze die <strong>Pfeiltasten</strong> oder <strong>W, A, S, D</strong>, um Fritzi zu bewegen:</p>
+            <ul>
+                <li><strong>↑ / W:</strong> Hoch</li>
+                <li><strong>↓ / S:</strong> Runter</li>
+                <li><strong>← / A:</strong> Links</li>
+                <li><strong>→ / D:</strong> Rechts</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <h1>Schlüsselmomente - Das Spiel</h1>
+        <div id="spiel-info">
+            <span>Level: <span id="current-level-display">1</span></span>
+            <span>Zeit: <span id="timer">30</span>s</span>
+            <span id="level-goal-display">Laden...</span>
+            <span>Gesamt: <span id="score">0</span></span>
+        </div>
+        <canvas id="gameCanvas" width="1000" height="600"></canvas>
+    </div>
+
+    <div class="right-column">
+        <div id="highScoreSection">
+            <h2>High Scores (Top 10)</h2>
+            <ol id="highScoreList">
+                </ol>
+            <p class="highscore-info">(Info: Um den komplexen rechtlichen Anforderungen für Online-Bestenlisten (z.B. im Datenschutz) zu entgehen, speichert dieses Spiel die Highscores nur lokal im Browser.)</p>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
