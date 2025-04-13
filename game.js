@@ -55,8 +55,8 @@ const level2Time = 40; const targetKeysLevel2 = 30; const obstacleCountLevel2 = 
 const level3Time = 30; const targetKeysLevel3 = 10;
 const level4Time = 40; const targetKeysLevel4 = 10; const obstacleCountLevel4 = 8;
 const level5Time = 40; const targetKeysLevel5 = 15;
-const level6Time = 65; const targetKeysLevel6 = 20; const obstacleCountLevel6 = 8;
-const level7Time = 95; const targetKeysLevel7 = 25; const obstacleCountLevel7 = 10;
+const level6Time = 60; const targetKeysLevel6 = 20; const obstacleCountLevel6 = 8;
+const level7Time = 90; const targetKeysLevel7 = 25; const obstacleCountLevel7 = 10;
 
 // Spiel-Variablen
 let score = 0; let timeLeft = level1Time; const keySize = 40; const playerSpeed = 4;
