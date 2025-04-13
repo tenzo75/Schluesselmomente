@@ -51,10 +51,10 @@ const obstacleColor = '#888888';
 const obstacleImageWidth = 80; const obstacleImageHeight = 45;
 const minObstacleDistSq = (obstacleImageWidth + 40) * (obstacleImageWidth + 40);
 const level1Time = 30; const targetKeysLevel1 = 20;
-const level2Time = 40; const targetKeysLevel2 = 30; const obstacleCountLevel2 = 6;
-const level3Time = 30; const targetKeysLevel3 = 10;
-const level4Time = 40; const targetKeysLevel4 = 10; const obstacleCountLevel4 = 8;
-const level5Time = 40; const targetKeysLevel5 = 15;
+const level2Time = 35; const targetKeysLevel2 = 30; const obstacleCountLevel2 = 6;
+const level3Time = 30; const targetKeysLevel3 = 15;
+const level4Time = 30; const targetKeysLevel4 = 15; const obstacleCountLevel4 = 8;
+const level5Time = 40; const targetKeysLevel5 = 20;
 const level6Time = 60; const targetKeysLevel6 = 20; const obstacleCountLevel6 = 8;
 const level7Time = 90; const targetKeysLevel7 = 25; const obstacleCountLevel7 = 10;
 
