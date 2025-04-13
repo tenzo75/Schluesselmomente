@@ -1,2 +1,2 @@
-# Schluesselmomente---Das-Spiel
+# Schluesselmomente
 Ki Game Projekt
